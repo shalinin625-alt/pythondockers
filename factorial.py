@@ -1,12 +1,21 @@
-num = int(input("Enter a number: "))
+from flask import Flask, request
 
-fact = 1
+app = Flask(__name__)
 
-if num < 0:
-    print("Factorial does not exist for negative numbers")
-elif num == 0:
-    print("Factorial of 0 is 1")
-else:
-    for i in range(1, num + 1):
-        fact *= i
-    print("Factorial of", num, "is", fact)
+@app.route('/')
+def home():
+    return "Go to /factorial?number=5 to calculate factorial"
+
+@app.route('/factorial')
+def factorial():
+    try:
+        num = int(request.args.get('number', 0))
+        fact = 1
+        for i in range(1, num + 1):
+            fact *= i
+        return f"Factorial of {num} is {fact}"
+    except:
+        return "Please provide a valid number like /factorial?number=5"
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000)
